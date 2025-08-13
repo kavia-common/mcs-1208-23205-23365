@@ -24,12 +24,12 @@ module.exports = {
           // We will load remotes dynamically at runtime; keep this empty.
           remotes: {},
           exposes: {},
-          // Share React as singletons and explicitly avoid eager consumption.
+          // Share React as singletons with eager consumption for MF runtime stability.
           // Include react/jsx-runtime to match React 17+ automatic JSX runtime.
           shared: {
-            react: { singleton: true, strictVersion: false, requiredVersion: false, eager: false },
-            'react-dom': { singleton: true, strictVersion: false, requiredVersion: false, eager: false },
-            'react/jsx-runtime': { singleton: true, strictVersion: false, requiredVersion: false, eager: false }
+            react: { singleton: true, strictVersion: false, requiredVersion: false, eager: true },
+            'react-dom': { singleton: true, strictVersion: false, requiredVersion: false, eager: true },
+            'react/jsx-runtime': { singleton: true, strictVersion: false, requiredVersion: false, eager: true }
           }
         })
       );
