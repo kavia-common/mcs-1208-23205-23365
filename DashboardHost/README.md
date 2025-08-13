@@ -1,82 +1,56 @@
-# Lightweight React Template for KAVIA
+# DashboardHost - Micro Frontend Host
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A React 18 host application providing a unified navigation shell and dynamic integration of remote micro frontends (Asset, Templates, Explorer) using Webpack Module Federation.
 
 ## Features
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- Unified shell: header, top navigation, sidebar, breadcrumbs
+- Dynamic Module Federation with runtime remote loading
+- Routing and deep linking (react-router-dom v6)
+- Shared state and authentication context (Context + localStorage)
+- Error boundaries, accessible skip links, ARIA attributes
+- Cypress e2e scaffolding
 
 ## Getting Started
 
-In the project directory, you can run:
+1) Install
+- Copy `.env.example` to `.env` and set remote URLs
+- Run `npm install`
 
-### `npm start`
+2) Develop
+- `npm start` to run dev server (Craco + CRA)
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3) Test
+- Unit tests: `npm test`
+- Cypress e2e: `npm run cypress:open` or `npm run cypress:run`
 
-### `npm test`
+## Environment Variables
 
-Launches the test runner in interactive watch mode.
+Place in `.env` at repo root:
+- `REACT_APP_ASSET_REMOTE_URL=https://asset.example.com`
+- `REACT_APP_TEMPLATES_REMOTE_URL=https://templates.example.com`
+- `REACT_APP_EXPLORER_REMOTE_URL=https://explorer.example.com`
+Optional:
+- `REACT_APP_SITE_URL=` base site URL used by auth providers if needed.
 
-### `npm run build`
+These endpoints must host `remoteEntry.js` at the root path.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Module Federation
 
-## Customization
+This host uses Craco to inject Webpack's `ModuleFederationPlugin` and share React as singletons. Remotes are loaded at runtime via script injection to `remoteEntry.js`. Each remote should expose `./App` as its root component and have a `scope` matching its name (e.g., `asset`, `templates`, `explorer`).
 
-### Colors
+## Accessibility
 
-The main brand colors are defined as CSS variables in `src/App.css`:
+- Semantic landmarks (banner, contentinfo)
+- Skip to content link
+- Breadcrumbs with `aria-current="page"`
+- Keyboard focus styles
 
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
+## Project Structure (selected)
 
-### Components
+- `src/App.js` — Shell layout and routing
+- `src/state/AppStateProvider.jsx` — Shared state and auth contexts
+- `src/components/RemoteComponent.jsx` — Remote dynamic loader
+- `src/mf/loadRemote.js` — Module Federation runtime loader
+- `src/mf/remotes.js` — Remote URL configuration
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
